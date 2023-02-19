@@ -9,6 +9,8 @@ import { Header, MonthSelector, YearSelector, DaysList } from './components';
 const Calendar = ({
   value,
   onChange,
+  onMonthChange,
+  onYearChange,
   onDisabledDayError,
   calendarClassName,
   calendarTodayClassName,
@@ -85,27 +87,39 @@ const Calendar = ({
   };
 
   const updateDate = () => {
+    const newActiveDate = getDateAccordingToMonth(activeDate, mainState.monthChangeDirection);
     setMainState({
       ...mainState,
-      activeDate: getDateAccordingToMonth(activeDate, mainState.monthChangeDirection),
+      activeDate: newActiveDate,
       monthChangeDirection: '',
     });
+    if (typeof onMonthChange === 'function') {
+      onMonthChange(newActiveDate);
+    }
   };
 
   const selectMonth = newMonthNumber => {
+    const newActiveDate = { ...activeDate, month: newMonthNumber };
     setMainState({
       ...mainState,
-      activeDate: { ...activeDate, month: newMonthNumber },
+      activeDate: newActiveDate,
       isMonthSelectorOpen: false,
     });
+    if (typeof onMonthChange === 'function') {
+      onMonthChange(newActiveDate);
+    }
   };
 
   const selectYear = year => {
+    const newActiveDate = { ...activeDate, year };
     setMainState({
       ...mainState,
-      activeDate: { ...activeDate, year },
+      activeDate: newActiveDate,
       isYearSelectorOpen: false,
     });
+    if (typeof onYearChange === 'function') {
+      onYearChange(newActiveDate);
+    }
   };
 
   return (
